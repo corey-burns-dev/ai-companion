@@ -1,9 +1,10 @@
 use axum::{routing::{post, get}, Router, Json};
-use axum::extract::Multipart;
 mod transcribe;
 use transcribe::transcribe_handler;
 mod history;
 use history::{ChatEntry, append_to_history, load_history};
+mod transcribe_stream;
+use transcribe_stream::transcribe_stream_handler;
 use serde::{Deserialize, Serialize};
 use std::env;
 
@@ -82,7 +83,8 @@ async fn main() {
     let app = Router::new()
         .route("/api/chat", post(chat_handler))
         .route("/api/history", get(history_handler))
-        .route("/api/transcribe", post(transcribe_handler));
+        .route("/api/transcribe", post(transcribe_handler))
+        .route("/api/transcribe-stream", post(transcribe_stream_handler));
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }

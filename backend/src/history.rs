@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use std::fs::{OpenOptions, File};
+use std::fs::File;
 use std::io::{BufReader, Write};
 use std::path::Path;
 

@@ -14,5 +14,13 @@
   {
     "role": "assistant",
     "content": "\nSure! Here's a \"Hello, World!\" program in Rust:\n```\nfn main() {\n    println!(\"Hello, World!\");\n}\n```\nHere's what each line does:\n\n1. `fn main()` declares a function named `main`, which is the entry point of the program.\n2. `println!(\"Hello, World!\")` prints the string \"Hello, World!\" to the standard output. The `println!` macro is used to print a message, and it takes a string as an argument.\n\nThat's it! This program will print \"Hello, World!\" to the standard output when you run it."
+  },
+  {
+    "role": "user",
+    "content": "generate me a hello world in rust"
+  },
+  {
+    "role": "assistant",
+    "content": ""
   }
 ]
