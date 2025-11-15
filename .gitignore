@@ -1,13 +1,17 @@
 # Rust
 /target/
-**/*.rs.bk
 Cargo.lock
+**/*.rs.bk
 
 # Node/Vite/React
-/frontend/node_modules/
-/frontend/dist/
-/frontend/.vite/
-/frontend/.env*
+node_modules/
+dist/
+.vite/
+.env*
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.env*
 
 # VSCode
 .vscode/
@@ -18,6 +22,10 @@ Thumbs.db
 
 # Logs
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Python (if added later)
 __pycache__/
@@ -27,3 +35,35 @@ __pycache__/
 *.swp
 *.swo
 .idea/
+
+# Large files
+*.bin
+*.exe
+*.dll
+*.so
+*.dylib
+*.out
+*.obj
+*.class
+*.jar
+*.zip
+*.tar
+*.gz
+*.tgz
+*.7z
+*.rar
+*.bak
+*.tmp
+
+# Frontend build artifacts
+frontend/build/
+frontend/.cache/
+
+# Backend build artifacts
+backend/target/
+backend/.cache/
+
+# Whisper.cpp output
+*.txt
+*.jsonl
+/tmp/

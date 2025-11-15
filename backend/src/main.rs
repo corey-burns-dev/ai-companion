@@ -1,4 +1,9 @@
-use axum::{routing::post, Router, Json};
+use axum::{routing::{post, get}, Router, Json};
+use axum::extract::Multipart;
+mod transcribe;
+use transcribe::transcribe_handler;
+mod history;
+use history::{ChatEntry, append_to_history, load_history};
 use serde::{Deserialize, Serialize};
 use std::env;
 
@@ -11,6 +16,11 @@ struct ChatRequest {
 #[derive(Serialize)]
 struct ChatResponse {
     response: String,
+}
+
+#[derive(Serialize)]
+struct HistoryResponse {
+    history: Vec<ChatEntry>,
 }
 
 async fn chat_handler(Json(payload): Json<ChatRequest>) -> Json<ChatResponse> {
@@ -50,6 +60,9 @@ async fn chat_handler(Json(payload): Json<ChatRequest>) -> Json<ChatResponse> {
             }
         }
     }
+    // Save user and assistant messages to history
+    append_to_history(&ChatEntry { role: "user".to_string(), content: payload.message.clone() });
+    append_to_history(&ChatEntry { role: "assistant".to_string(), content: reply.clone() });
     if reply.is_empty() {
         eprintln!("Ollama streaming response missing content: {}", resp);
         Json(ChatResponse { response: format!("(no response from model)\nFull Ollama response: {}", resp) })
@@ -58,10 +71,18 @@ async fn chat_handler(Json(payload): Json<ChatRequest>) -> Json<ChatResponse> {
     }
 }
 
+async fn history_handler() -> Json<HistoryResponse> {
+    let history = load_history();
+    Json(HistoryResponse { history })
+}
+
 #[tokio::main]
 async fn main() {
     dotenv::dotenv().ok();
-    let app = Router::new().route("/api/chat", post(chat_handler));
+    let app = Router::new()
+        .route("/api/chat", post(chat_handler))
+        .route("/api/history", get(history_handler))
+        .route("/api/transcribe", post(transcribe_handler));
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
